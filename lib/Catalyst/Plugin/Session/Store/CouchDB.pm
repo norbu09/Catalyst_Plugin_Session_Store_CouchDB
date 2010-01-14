@@ -4,7 +4,8 @@ use strict;
 use base qw/
   Class::Accessor::Fast
   Class::Data::Inheritable
-  Catalyst::Plugin::Session::Store/;
+  Catalyst::Plugin::Session::Store
+  Catalyst::Plugin::Session::Store::Delegate/;
 
 use Store::CouchDB;
 
