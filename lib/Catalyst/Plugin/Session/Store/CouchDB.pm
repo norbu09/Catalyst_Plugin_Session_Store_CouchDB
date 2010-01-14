@@ -1,7 +1,12 @@
 package Catalyst::Plugin::Session::Store::CouchDB;
 
 use strict;
-use base qw/Catalyst::Plugin::Session::Store::Delegate/;
+use base qw/
+  Class::Accessor::Fast
+  Class::Data::Inheritable
+  Catalyst::Plugin::Session::Store/;
+
+use MRO::Compat;
 
 use Store::CouchDB;
 
