@@ -9,6 +9,7 @@ use base qw/
 use MRO::Compat;
 
 use Store::CouchDB;
+use Data::Dumper;
 
 __PACKAGE__->mk_classdata(qw/_session_couchdb_storage/);
 
@@ -54,9 +55,16 @@ sub get_session_data {
 
 sub store_session_data {
     my ( $c, $sid, $data ) = @_;
-    $data->{_id} = $sid;
+    $c->log->debug(Dumper($data));
+    my $sess;
+    if(ref($data) eq 'SCALAR'){
+        $sess->{data} = $data;
+    } else {
+        $sess = $data;
+    }
+    $sess->{_id} = $sid;
     $c->_verify_couchdb_connection;
-    $c->_session_couchdb_storage->put_doc( { doc => $data } )
+    $c->_session_couchdb_storage->put_doc( { doc => $sess } )
       or Catalyst::Exception->throw("store_session: data too large");
 }
 
