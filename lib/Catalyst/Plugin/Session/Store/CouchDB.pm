@@ -48,18 +48,21 @@ if you don't export anything, such as for a purely object-oriented module.
 
 sub get_session_data {
     my ( $c, $sid ) = @_;
+    $c->_verify_couchdb_connection;
     $c->_session_couchdb_storage->get_doc( { id => $sid } );
 }
 
 sub store_session_data {
     my ( $c, $sid, $data ) = @_;
     $data->{_id} = $sid;
+    $c->_verify_couchdb_connection;
     $c->_session_couchdb_storage->put_doc( { doc => $data } )
       or Catalyst::Exception->throw("store_session: data too large");
 }
 
 sub delete_session_data {
     my ( $c, $sid ) = @_;
+    $c->_verify_couchdb_connection;
     $c->_session_couchdb_storage->del_doc( { id => $sid } );
 }
 
@@ -69,6 +72,11 @@ sub setup_session {
     my $c = shift;
 
     $c->maybe::next::method(@_);
+}
+
+sub _verify_couchdb_connection {
+    my $c = shift;
+
     my $cfg = $c->_session_plugin_config;
 
     $c->_session_couchdb_storage(
