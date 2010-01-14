@@ -69,12 +69,13 @@ sub setup_session {
     my $c = shift;
 
     $c->maybe::next::method(@_);
+    my $cfg = $c->_session_plugin_config;
 
     $c->_session_couchdb_storage(
         Store::CouchDB->new(
-            host => $c->_session_plugin_config->{host} || '127.0.0.1',
-            port => $c->_session_plugin_config->{port} || '5984',
-            db   => $c->_session_plugin_config->{db}   || 'session',
+            host => $cfg->{host} || '127.0.0.1',
+            port => $cfg->{port} || '5984',
+            db   => $cfg->{db}   || 'session',
         )
     );
 }
